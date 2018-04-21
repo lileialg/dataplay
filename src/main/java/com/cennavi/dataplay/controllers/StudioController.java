@@ -1,11 +1,16 @@
 package com.cennavi.dataplay.controllers;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cennavi.dataplay.components.BasemapComp;
 import com.cennavi.dataplay.model.ModelBase;
 import com.cennavi.dataplay.model.ModelComp;
 
@@ -13,13 +18,22 @@ import com.cennavi.dataplay.model.ModelComp;
 @RequestMapping(value = "/studio")
 public class StudioController {
 
+	private static final Logger logger = LoggerFactory.getLogger(StudioController.class);
+	
+	@Autowired
+	private BasemapComp basemapComp;
 
 	@RequestMapping("/basemap-list")
 	public List<ModelComp> basemapList(String name){
 		
-		List<ModelComp> list = new ArrayList<>();
+		try {
+			return basemapComp.basemapList(name);
+		} catch (FileNotFoundException e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		}
 		
-		return list;
+		return new ArrayList<>();
 		
 	}
 	
@@ -55,11 +69,16 @@ public class StudioController {
 	
 	
 	@RequestMapping("/basemap")
-	public ModelBase basemap(int id){
+	public ModelBase basemap(String id){
 		
-		ModelBase model = null;
+		try {
+			return basemapComp.basemap(id);
+		} catch (FileNotFoundException e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		}
 		
-		return model;
+		return null;
 		
 	}
 	
