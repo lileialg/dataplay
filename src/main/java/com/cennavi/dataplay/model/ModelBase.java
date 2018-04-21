@@ -8,6 +8,48 @@ public class ModelBase {
 	private String name;
 	
 	private String token;
+	
+	private double bearing;
+	
+	private double pitch;
+	
+	private double zoom;
+	
+	private double[] center;
+	
+	
+
+	public double getBearing() {
+		return bearing;
+	}
+
+	public void setBearing(double bearing) {
+		this.bearing = bearing;
+	}
+
+	public double getPitch() {
+		return pitch;
+	}
+
+	public void setPitch(double pitch) {
+		this.pitch = pitch;
+	}
+
+	public double getZoom() {
+		return zoom;
+	}
+
+	public void setZoom(double zoom) {
+		this.zoom = zoom;
+	}
+
+	public double[] getCenter() {
+		return center;
+	}
+
+	public void setCenter(double[] center) {
+		this.center = center;
+	}
 
 	public String getId() {
 		return id;

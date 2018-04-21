@@ -35,17 +35,30 @@ public class BasemapComp {
 
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();
+				
+				
 
 				String[] splits = line.split(",");
-
 				String mapName = splits[0];
+				System.out.println(mapName+"-----"+splits.length);
+				
+				
 				String solution = splits[1];
 				String token = splits[2];
+				String center = splits[3];
+				String zoom = splits[4];
+				String bearing = splits[5];
+				String pitch = splits[6];
 
 				Map<String, String> map = new HashMap<>();
 				map.put("name", mapName);
 				map.put("solution", solution);
 				map.put("token", token);
+				
+				map.put("center", center);
+				map.put("zoom", zoom);
+				map.put("bearing", bearing);
+				map.put("pitch", pitch);
 
 				basemapInfo.put(solution, map);
 			}
@@ -113,6 +126,16 @@ public class BasemapComp {
 		model.setId(id);
 		model.setName(map.get("name"));
 		model.setToken(map.get("token"));
+		
+		double[] center = new double[2];
+		String[] cs = map.get("center").split("\\|");
+		center[0] = Double.parseDouble(cs[0]);
+		center[1] = Double.parseDouble(cs[1]);
+		model.setCenter(center);
+		
+		model.setZoom(Double.parseDouble(map.get("zoom")));
+		model.setBearing(Double.parseDouble(map.get("bearing")));
+		model.setPitch(Double.parseDouble(map.get("pitch")));
 		
 		return model;
 		
