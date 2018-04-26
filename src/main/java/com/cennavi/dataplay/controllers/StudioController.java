@@ -11,8 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cennavi.dataplay.components.BasemapComp;
+import com.cennavi.dataplay.components.ChartComp;
+import com.cennavi.dataplay.components.RenderComp;
 import com.cennavi.dataplay.model.ModelBase;
+import com.cennavi.dataplay.model.ModelChart;
 import com.cennavi.dataplay.model.ModelComp;
+import com.cennavi.dataplay.model.ModelRender;
 
 @RestController
 @RequestMapping(value = "/studio")
@@ -22,6 +26,12 @@ public class StudioController {
 	
 	@Autowired
 	private BasemapComp basemapComp;
+	
+	@Autowired
+	private RenderComp renderComp;
+	
+	@Autowired
+	private ChartComp chartComp;
 
 	@RequestMapping("/basemap-list")
 	public List<ModelComp> basemapList(String name){
@@ -41,9 +51,14 @@ public class StudioController {
 	@RequestMapping("/render-list")
 	public List<ModelComp> renderList(String name){
 		
-		List<ModelComp> list = new ArrayList<>();
+		try {
+			return renderComp.renderList(name);
+		} catch (FileNotFoundException e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		}
 		
-		return list;
+		return new ArrayList<>();
 		
 	}
 	
@@ -51,9 +66,14 @@ public class StudioController {
 	@RequestMapping("/chart-list")
 	public List<ModelComp> chartList(String name){
 		
-		List<ModelComp> list = new ArrayList<>();
+		try {
+			return chartComp.chartList(name);
+		} catch (FileNotFoundException e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		}
 		
-		return list;
+		return new ArrayList<>();
 		
 	}
 	
@@ -83,20 +103,30 @@ public class StudioController {
 	}
 	
 	@RequestMapping("/render")
-	public ModelBase render(int id){
+	public ModelRender render(String id){
 		
-		ModelBase model = null;
+		try {
+			return renderComp.renderMap(id);
+		} catch (FileNotFoundException e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		}
 		
-		return model;
+		return null;
 		
 	}
 	
 	@RequestMapping("/chart")
-	public ModelBase chart(int id){
+	public ModelChart chart(String id){
 		
-		ModelBase model = null;
+		try {
+			return chartComp.chart(id);
+		} catch (FileNotFoundException e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		}
 		
-		return model;
+		return null;
 		
 	}
 	

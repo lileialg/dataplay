@@ -12,24 +12,24 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.cennavi.dataplay.model.ModelBase;
 import com.cennavi.dataplay.model.ModelComp;
+import com.cennavi.dataplay.model.ModelRender;
 
 @Component
-public class BasemapComp {
+public class RenderComp {
 
-	@Value("${basemap.init.path}")
+	@Value("${render.init.path}")
 	private String path;
 	
-	@Value("${basemap.image.url.prefix}")
+	@Value("${render.image.url.prefix}")
 	private String imagePrefixUrl;
 
-	private Map<String, Map<String, String>> basemapInfo = new HashMap<>();
+	private Map<String, Map<String, String>> renderInfo = new HashMap<>();
 	
 	private void init() throws FileNotFoundException{
 		
 
-		if (basemapInfo.size() == 0) {
+		if (renderInfo.size() == 0) {
 
 			Scanner scanner = new Scanner(new FileInputStream(path));
 
@@ -43,23 +43,17 @@ public class BasemapComp {
 				
 				
 				String solution = splits[1];
-				String token = splits[2];
-				String center = splits[3];
-				String zoom = splits[4];
-				String bearing = splits[5];
-				String pitch = splits[6];
+				String center = splits[2];
+
 
 				Map<String, String> map = new HashMap<>();
 				map.put("name", mapName);
 				map.put("solution", solution);
-				map.put("token", token);
 				
 				map.put("center", center);
-				map.put("zoom", zoom);
-				map.put("bearing", bearing);
-				map.put("pitch", pitch);
 
-				basemapInfo.put(solution, map);
+
+				renderInfo.put(solution, map);
 			}
 
 			scanner.close();
@@ -67,14 +61,14 @@ public class BasemapComp {
 		}
 	}
 
-	public List<ModelComp> basemapList(String name)
+	public List<ModelComp> renderList(String name)
 			throws FileNotFoundException {
 
 		init();
 
 		List<ModelComp> list = new ArrayList<>();
 
-		Set<Map.Entry<String, Map<String, String>>> set = basemapInfo
+		Set<Map.Entry<String, Map<String, String>>> set = renderInfo
 				.entrySet();
 
 		if (name != null && name.length() > 0) {
@@ -114,27 +108,13 @@ public class BasemapComp {
 
 	}
 	
-	public ModelBase basemap(String id) throws FileNotFoundException{
+	public ModelRender renderMap(String id) throws FileNotFoundException{
 		
 		init();
 		
-		ModelBase model = new ModelBase();
+		ModelRender model = new ModelRender();
 		
-		Map<String,String> map = basemapInfo.get(id);
 		
-		model.setId(id);
-		model.setName(map.get("name"));
-		model.setToken(map.get("token"));
-		
-		double[] center = new double[2];
-		String[] cs = map.get("center").split("\\|");
-		center[0] = Double.parseDouble(cs[0]);
-		center[1] = Double.parseDouble(cs[1]);
-		model.setCenter(center);
-		
-		model.setZoom(Double.parseDouble(map.get("zoom")));
-		model.setBearing(Double.parseDouble(map.get("bearing")));
-		model.setPitch(Double.parseDouble(map.get("pitch")));
 		
 		return model;
 		
